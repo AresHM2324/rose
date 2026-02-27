@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Algo Inesquecível ✨</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      height:100vh;
+      background: radial-gradient(circle at 20% 30%, #0f001a, #000814 70%);
+      overflow:hidden;
+      font-family:'Poppins', sans-serif;
+      color:#fff;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      position:relative;
+    }
+
+    .stars, .stars2 {
+      position:absolute; inset:0;
+      background: radial-gradient(white 1px, transparent 1px), radial-gradient(white 1px, transparent 1px);
+      background-size:60px 60px, 40px 40px;
+      opacity:0.4;
+      animation:drift 180s linear infinite;
+    }
+    .stars2 { background-size:80px 80px, 50px 50px; opacity:0.25; animation-duration:240s; animation-direction:reverse; }
+    @keyframes drift {
+      from { background-position:0 0, 30px 30px; }
+      to   { background-position:1000px 1000px, -200px -200px; }
+    }
+
+    .start-message {
+      font-size: clamp(2.2rem, 7vw, 4rem);
+      text-align:center;
+      text-shadow:0 0 25px #ff4d6d;
+      cursor:pointer;
+      animation:pulse 2.5s infinite alternate;
+      z-index:10;
+    }
+    @keyframes pulse { from { transform:scale(1); } to { transform:scale(1.1); } }
+
+    .countdown {
+      font-size: clamp(5rem, 15vw, 12rem);
+      font-weight:700;
+      text-shadow:0 0 50px #ff4d6d, 0 0 100px #ff0055;
+      letter-spacing:10px;
+      animation:pulse 1.8s infinite alternate;
+      display:none;
+      z-index:10;
+    }
+
+    .gift-wrapper {
+      perspective:1200px;
+      width:240px;
+      height:240px;
+      display:none;
+      cursor:pointer;
+      animation:shake 3s infinite ease-in-out;
+    }
+    @keyframes shake {
+      0%,100% { transform:translateX(0); }
+      25% { transform:translateX(-8px) rotate(-3deg); }
+      75% { transform:translateX(8px) rotate(3deg); }
+    }
+    .gift {
+      width:100%; height:100%;
+      position:relative;
+      transform-style:preserve-3d;
+      transition:transform 1.5s cubic-bezier(0.175,0.885,0.32,1.275);
+      transform:rotateY(20deg) rotateX(15deg);
+    }
+    .gift:hover { transform:rotateY(30deg) rotateX(22deg) scale(1.1); }
+
+    .box {
+      position:absolute; width:100%; height:65%; bottom:0;
+      background:linear-gradient(135deg, #ff0055, #c40040);
+      border-radius:20px;
+      box-shadow:0 30px 60px rgba(255,0,85,0.7);
+      overflow:hidden;
+    }
+    .lid {
+      position:absolute; width:112%; height:45%; top:-22%; left:-6%;
+      background:linear-gradient(135deg, #ff4d6d, #ff0055);
+      border-radius:20px 20px 0 0;
+      transform-origin:bottom;
+      transition:transform 1.8s cubic-bezier(0.68,-0.55,0.265,1.55);
+      box-shadow:0 20px 50px rgba(0,0,0,0.8);
+    }
+    .ribbon {
+      position:absolute; inset:0;
+      background:repeating-linear-gradient(45deg, #ffd700aa, #ffd700aa 12px, transparent 12px, transparent 24px);
+    }
+
+    .balloon {
+      position:absolute;
+      width:50px; height:70px;
+      background:radial-gradient(circle at 30% 30%, #fff, transparent);
+      border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+      box-shadow:0 10px 30px rgba(0,0,0,0.4);
+      opacity:0;
+      animation:floatUp 8s forwards;
+      z-index:4;
+    }
+    @keyframes floatUp {
+      0% { transform:translateY(100px) scale(0.5); opacity:0; }
+      20% { opacity:1; }
+      100% { transform:translateY(-120vh) scale(1.2); opacity:0; }
+    }
+
+    .reveal {
+      position:absolute;
+      display:none;
+      flex-direction:column;
+      align-items:center;
+      text-align:center;
+      padding:50px 30px;
+      max-width:90%;
+      backdrop-filter:blur(18px);
+      background:rgba(255,255,255,0.07);
+      border:1px solid rgba(255,255,255,0.15);
+      border-radius:30px;
+      box-shadow:0 25px 70px rgba(0,0,0,0.7);
+      animation:popIn 2s ease-out forwards;
+      z-index:5;
+    }
+    .reveal img {
+      width:170px; height:170px;
+      border-radius:50%;
+      object-fit:cover;
+      border:7px solid #ff4d6d;
+      box-shadow:0 0 50px #ff4d6d90;
+      margin-bottom:30px;
+    }
+    .reveal h1 {
+      font-family:'Great Vibes', cursive;
+      font-size:clamp(4rem, 12vw, 7rem);
+      text-shadow:0 0 40px #ff4d6d;
+      margin:0 0 20px;
+      overflow:hidden;
+      white-space:nowrap;
+      border-right:4px solid #ff4d6d;
+      animation:typing 4s steps(30) forwards, blink 0.8s step-end infinite;
+    }
+    @keyframes typing {
+      from { width:0; }
+      to { width:100%; }
+    }
+    @keyframes blink {
+      50% { border-color:transparent; }
+    }
+    .reveal p {
+      font-size:1.4rem;
+      max-width:600px;
+      line-height:1.7;
+      opacity:0.95;
+    }
+    @keyframes popIn {
+      0% { opacity:0; transform:scale(0.5) translateY(80px); }
+      80% { transform:scale(1.05) translateY(-15px); }
+      100% { transform:scale(1) translateY(0); }
+    }
+
+    /* Slideshow */
+    .slideshow {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      z-index: 6;
+      backdrop-filter: blur(10px);
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .slideshow.show { display: block; pointer-events: auto; }
+    .slideshow-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 2.5rem;
+      cursor: pointer;
+      color: #fff;
+      text-shadow: 0 0 10px #000;
+      z-index: 10;
+      pointer-events: auto;
+    }
+    .slideshow-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    .slide {
+      position: absolute;
+      width: clamp(140px, 22vw, 280px);
+      height: auto;
+      opacity: 0;
+      object-fit: cover;
+      border-radius: 16px;
+      box-shadow: 0 15px 45px rgba(0,0,0,0.65);
+      pointer-events: none;
+      will-change: transform, opacity;
+    }
+
+    @keyframes flyPhoto {
+      0%   { opacity: 0; transform: translate(var(--start-x), var(--start-y)) rotate(var(--start-rot)) scale(var(--start-scale)); }
+      15%  { opacity: 1; transform: translate(0, 0) rotate(0deg) scale(1); }
+      85%  { opacity: 1; transform: translate(0, 0) rotate(0deg) scale(1); }
+      100% { opacity: 0; transform: translate(var(--end-x), var(--end-y)) rotate(var(--end-rot)) scale(var(--end-scale)); }
+    }
+
+    .slideshow-btn {
+      display: block;
+      margin: 25px auto 0;
+      padding: 14px 36px;
+      background: linear-gradient(45deg, #ff0055, #ff4d6d);
+      border: none;
+      border-radius: 50px;
+      color: white;
+      font-size: 1.25rem;
+      cursor: pointer;
+      box-shadow: 0 12px 35px rgba(255,0,85,0.6);
+      transition: all 0.3s;
+    }
+    .slideshow-btn:hover { transform: scale(1.08); }
+
+    @media (max-width: 600px) {
+      .gift-wrapper { width: 200px; height: 200px; }
+      .reveal { padding: 40px 20px; }
+      .reveal img { width: 140px; height: 140px; }
+      .reveal h1 { font-size: 3rem; }
+      .slide { width: clamp(110px, 38vw, 220px); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="stars"></div>
+  <div class="stars2"></div>
+
+  <audio autoplay loop id="bgMusic">
+    <source src="musica.mp3" type="audio/mpeg">
+  </audio>
+
+  <audio id="explodeSound">
+    <source src="https://assets.mixkit.co/sfx/preview/mixkit-fireworks-burst-1980.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="start-message" id="startMessage">Toque na tela para começar ✨</div>
+  <div class="countdown" id="count"></div>
+
+  <div class="gift-wrapper" id="giftWrapper">
+    <div class="gift" id="gift" onclick="openGift()">
+      <div class="box"><div class="ribbon"></div></div>
+      <div class="lid" id="lid"></div>
+    </div>
+  </div>
+
+  <div class="reveal" id="reveal">
+    <img src="639444373_1686108029417340_6666139248647735784_n.jpg" alt="Aniversariante">
+    <h1>Feliz Aniversário!</h1>
+    <p>
+      Hoje o universo parou só para te celebrar.<br>
+      Que este novo ciclo venha carregado de aventuras, risadas sem fim e tudo o que faz teu coração bater mais forte.<br><br>
+      <strong>Tu és inesquecível. Brilha sempre! 🖤✨</strong>
+    </p>
+    <button class="slideshow-btn" onclick="showSlideshow()">Ver Nossos Momentos Juntos 📸</button>
+  </div>
+
+  <div class="slideshow" id="slideshow">
+    <div class="slideshow-close" onclick="closeSlideshow()">✖</div>
+    <div class="slideshow-container" id="slideshowContainer"></div>
+  </div>
+
+  <!-- Todas as suas fotos originais -->
+  <div id="photoTemplates" style="display:none;">
+    <img src="619274103_1306497214637470_852502972570680338_n.jpg" class="slide-template">
+    <img src="633952729_917175557455974_8388669894784809515_n.jpg" class="slide-template">
+    <img src="634728842_1563063438261000_1032595958366013765_n.jpg" class="slide-template">
+    <img src="634741450_1679170640113603_3903891911314802739_n.jpg" class="slide-template">
+    <img src="635073429_903141498998745_7645533959927777472_n.jpg" class="slide-template">
+    <img src="636331555_1657432172090106_3971527858361915268_n.jpg" class="slide-template">
+    <img src="636722344_896236289969899_8178318740416791047_n.jpg" class="slide-template">
+    <img src="636773452_1553957272374939_1863047274187941657_n.jpg" class="slide-template">
+    <img src="636812462_899156229531236_1630211320125936709_n.jpg" class="slide-template">
+    <img src="636817002_835303496191814_1554658986736908177_n.jpg" class="slide-template">
+    <img src="637149497_1913634359513392_7023793017872766925_n.jpg" class="slide-template">
+    <img src="637777645_1241319631307485_2533062271891927948_n.jpg" class="slide-template">
+    <img src="637789938_1897584450901095_465875562903106412_n.jpg" class="slide-template">
+    <img src="637865709_2133817607436498_7479807662738791678_n.jpg" class="slide-template">
+    <img src="638093035_1834239954045549_605872341775459123_n.jpg" class="slide-template">
+    <img src="638473967_779228015238899_4290670961699298235_n.jpg" class="slide-template">
+    <img src="638490096_1316382426965711_1332047391647293852_n.jpg" class="slide-template">
+    <img src="638733447_892764833512931_4136819211871326536_n.jpg" class="slide-template">
+    <img src="638843423_1449279009930118_2146558018746260080_n.jpg" class="slide-template">
+    <img src="639042340_2197560250775035_6686935672324561604_n.jpg" class="slide-template">
+    <img src="639161350_1361239222438891_4699427573060688610_n.jpg" class="slide-template">
+    <img src="639559320_1911473533073754_1163042377061252366_n.jpg" class="slide-template">
+    <img src="639722519_1731391261600123_2903549675368127808_n.jpg" class="slide-template">
+    <img src="640264475_2466718050411499_8925446925972057246_n.jpg" class="slide-template">
+    <img src="640345068_1639713563870106_4103399242604843383_n.jpg" class="slide-template">
+    <img src="640400831_1916418219243741_8728424767535844441_n.jpg" class="slide-template">
+    <img src="636726486_2937502033121149_5990546967109553175_n.jpg" class="slide-template">
+    <img src="634712886_930500132773846_113838953136640385_n.jpg" class="slide-template">
+    <img src="638324584_787204521089572_7705948854241477491_n.jpg" class="slide-template">
+    <img src="634733328_1694788784823822_3463036522958424904_n.jpg" class="slide-template">
+  </div>
+
+  <script>
+    const startMessage = document.getElementById("startMessage");
+    const countdownEl = document.getElementById("count");
+    const giftWrapper = document.getElementById("giftWrapper");
+    const bgMusic = document.getElementById("bgMusic");
+    const explodeSound = document.getElementById("explodeSound");
+    const slideshow = document.getElementById("slideshow");
+    const container = document.getElementById("slideshowContainer");
+
+    // Inicia quando clicar em qualquer lugar
+    document.body.addEventListener('click', startCountdown, { once: true });
+
+    function startCountdown() {
+      startMessage.style.display = 'none';
+      countdownEl.style.display = 'block';
+      bgMusic.play().catch(() => {});
+      
+      let count = 3;
+      countdownEl.innerText = count;
+
+      const interval = setInterval(() => {
+        count--;
+        if (count > 0) {
+          countdownEl.innerText = count;
+        } else {
+          clearInterval(interval);
+          countdownEl.innerText = "🎁";
+          setTimeout(() => {
+            countdownEl.style.display = "none";
+            giftWrapper.style.display = "block";
+          }, 1200);
+        }
+      }, 1000);
+    }
+
+    function openGift() {
+      document.getElementById("lid").style.transform = "rotateX(140deg)";
+
+      // Confetes
+      confetti({ particleCount: 150, spread: 90, startVelocity: 45, origin: { y: 0.6 },
+        colors: ['#ff0055', '#ff4d6d', '#ffd700', '#00ffff', '#ff00ff'] });
+      confetti({ particleCount: 100, angle: 60, spread: 80, origin: { x: 0 } });
+      confetti({ particleCount: 100, angle: 120, spread: 80, origin: { x: 1 } });
+
+      // Som de explosão
+      explodeSound.currentTime = 0;
+      explodeSound.play().catch(() => {});
+
+      // Balões
+      for (let i = 0; i < 12; i++) {
+        const b = document.createElement("div");
+        b.classList.add("balloon");
+        b.style.left = (Math.random() * 80 + 10) + "%";
+        b.style.background = `hsl(${Math.random()*360}, 90%, 60%)`;
+        b.style.animationDelay = Math.random() * 2 + "s";
+        document.body.appendChild(b);
+        setTimeout(() => b.remove(), 10000);
+      }
+
+      // Mostra a mensagem
+      setTimeout(() => {
+        giftWrapper.style.display = "none";
+        document.getElementById("reveal").style.display = "flex";
+      }, 1800);
+    }
+
+    // Slideshow com suas fotos
+    function showSlideshow() {
+      slideshow.classList.add("show");
+      container.innerHTML = "";
+
+      const templates = document.querySelectorAll(".slide-template");
+      if (templates.length === 0) return;
+
+      const numPhotos = templates.length;
+
+      for (let i = 0; i < numPhotos; i++) {
+        const template = templates[i];
+        const slide = document.createElement("img");
+        
+        // Copia o src do template
+        slide.src = template.src;
+        slide.classList.add("slide");
+        slide.alt = "Momento especial";
+
+        // Posição aleatória
+        const left = Math.random() * 100;
+        const top  = Math.random() * 100;
+        slide.style.left = left + "%";
+        slide.style.top  = top  + "%";
+
+        // Direção do movimento
+        const startSide = Math.random();
+        let startX = '0', startY = '0', endX = '0', endY = '0';
+
+        if (startSide < 0.25) {
+          startX = "-100vw"; endX = "100vw";
+        } else if (startSide < 0.5) {
+          startX = "100vw";  endX = "-100vw";
+        } else if (startSide < 0.75) {
+          startY = "-100vh"; endY = "100vh";
+        } else {
+          startY = "100vh";  endY = "-100vh";
+        }
+
+        // Rotação e escala
+        const startRot = (Math.random() - 0.5) * 60;
+        const endRot   = (Math.random() - 0.5) * 60;
+        const startScale = 0.6 + Math.random() * 0.4;
+        const endScale   = 0.9 + Math.random() * 0.6;
+
+        slide.style.setProperty('--start-x', startX);
+        slide.style.setProperty('--start-y', startY);
+        slide.style.setProperty('--end-x',   endX);
+        slide.style.setProperty('--end-y',   endY);
+        slide.style.setProperty('--start-rot', startRot + 'deg');
+        slide.style.setProperty('--end-rot',   endRot   + 'deg');
+        slide.style.setProperty('--start-scale', startScale);
+        slide.style.setProperty('--end-scale',   endScale);
+
+        // Duração e delay
+        const duration = 15 + Math.random() * 25;
+        const delay    = Math.random() * 10;
+
+        slide.style.animation = `flyPhoto ${duration}s ease-in-out ${delay}s infinite`;
+
+        container.appendChild(slide);
+      }
+    }
+
+    function closeSlideshow() {
+      slideshow.classList.remove("show");
+      container.innerHTML = '';
+    }
+
+    // Fallback para garantir que as imagens carreguem mesmo se houver erro 404
+    window.addEventListener('load', function() {
+      const images = document.querySelectorAll('img');
+      images.forEach(img => {
+        img.onerror = function() {
+          // Se a imagem não carregar, mostra um placeholder
+          this.src = 'https://via.placeholder.com/400x300/ff0055/ffffff?text=Foto+Especial';
+        };
+      });
+    });
+  </script>
+</body>
+</html>
